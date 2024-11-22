@@ -33,3 +33,4 @@ rect_1 = Rectangle(4, 5)
 rect_2 = Rectangle(15, 9)
 rect_1.calculate_area()
 rect_2.calculate_area()
+
