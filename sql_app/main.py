@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 # uvicorn sql_app.main:app --reload
 models.Base.metadata.create_all(bind=engine)  # создание чистой базы данных, если ее нет
+
 app = FastAPI()
 
 
@@ -19,7 +20,7 @@ def get_db():
 
 
 @app.post("/users/", response_model=schemas.User)
-def create_user(user:schemas.UserCreate, db: Session = Depends(get_db)):
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -32,7 +33,7 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return users
 
 
-@app.get("/users/{useer_id}", response_model=schemas.User)
+@app.get("/users/{user_id}", response_model=schemas.User)
 def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user(db, user_id=user_id)
     if db_user is None:
@@ -42,7 +43,7 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
 
 @app.post("/users/{user_id}/items/", response_model=schemas.Item)
 def create_item_for_user(
-        user_id: int, item: schemas.UserCreate, db: Session = Depends(get_db)):
+        user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db)):
     return crud.create_user_item(db=db, item=item, user_id=user_id)
 
 
