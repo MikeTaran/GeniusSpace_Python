@@ -44,7 +44,7 @@ app.include_router(
 
 app.include_router(
     file_router,
-    prefix="files",
+    prefix="/files",
     tags=["files"]
 )
 

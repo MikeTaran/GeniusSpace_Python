@@ -12,7 +12,7 @@ UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
-@file_router.post("/upload")
+@file_router.post("/upload/")
 async def upload_file(
         file: UploadFile = File(...),
         resize: str = Form(None),
@@ -27,7 +27,7 @@ async def upload_file(
         grayscale=grayscale,
         flip=flip
     )
-
+    print(options)
     user_folder = f"{UPLOAD_DIR}/{user.id}"
     os.makedirs(user_folder, exist_ok=True)
 
@@ -44,5 +44,6 @@ async def upload_file(
 async def download_file(filename: str, user: User = Depends(current_active_user)):
     user_folder = f"{UPLOAD_DIR}/{user.id}"
     file_location = os.path.join(user_folder, filename)
-    if  not os.path.exists(file_location):
+    if not os.path.exists(file_location):
         raise HTTPException(status_code=404, detail="File not found")
+    return FileResponse(file_location)

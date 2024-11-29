@@ -27,5 +27,4 @@ def process_image(file_location: str, options: ImageProcessionOptions):
             img.save(file_location, options.convert_to.upper())
         else:
             img.save(file_location)
-
     return file_location
