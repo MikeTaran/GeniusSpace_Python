@@ -1,28 +1,14 @@
 from collections.abc import AsyncGenerator
 
 from fastapi import Depends
-from fastapi_users.db import SQLAlchemyBaseUserTableUUID, SQLAlchemyUserDatabase
+from fastapi_users.db import SQLAlchemyUserDatabase
 from fastapi_users_db_sqlalchemy.access_token import (
     SQLAlchemyAccessTokenDatabase,
-    SQLAlchemyBaseAccessTokenTableUUID,
 )
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.orm import DeclarativeBase
+from app.user_models import Base, User, AccessToken
 
 DATABASE_URL = "postgresql+asyncpg://postgres:22@localhost/FastAPI_DB"
-
-
-class Base(DeclarativeBase):
-    pass
-
-
-class User(SQLAlchemyBaseUserTableUUID, Base):
-    pass
-
-
-class AccessToken(SQLAlchemyBaseAccessTokenTableUUID, Base):
-    pass
-
 
 engine = create_async_engine(DATABASE_URL)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
