@@ -44,3 +44,8 @@ app.include_router(
 @app.get("/authenticated-route")
 async def authenticated_route(user: User = Depends(current_active_user)):
     return {"message": f"Hello {user.email}!"}
+
+
+@app.on_event("startup")
+async def on_startup():
+    await create_db_and_tables()
