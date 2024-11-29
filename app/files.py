@@ -5,7 +5,7 @@ from fastapi.responses import FileResponse
 from app.schemas import ImageProcessionOptions
 from app.users import current_active_user
 from app.db import User
-
+from app.utils import process_image
 
 file_router = APIRouter()
 UPLOAD_DIR = "uploads"
@@ -13,7 +13,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
 @file_router.post("/upload")
-def upload_file(
+async def upload_file(
         file: UploadFile = File(...),
         resize: str = Form(None),
         convert_to: str = Form(None),
@@ -39,3 +39,10 @@ def upload_file(
     processed_file_location = process_image(file_location, options)
     return {"filename": os.path.basename(processed_file_location)}
 
+
+@file_router.get("/download/{file_name}", response_class=FileResponse)
+async def download_file(filename: str, user: User = Depends(current_active_user)):
+    user_folder = f"{UPLOAD_DIR}/{user.id}"
+    file_location = os.path.join(user_folder, filename)
+    if  not os.path.exists(file_location):
+        raise HTTPException(status_code=404, detail="File not found")
