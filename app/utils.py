@@ -1,12 +1,12 @@
-from PIL import Image, ImageOps
-import re
-from app.schemas import ImageProcessionOptions
 import os
+import re
+
+from PIL import Image, ImageOps
+from app.schemas import ImageProcessingOptions
 
 
-def process_image(file_location: str, options: ImageProcessionOptions):
+def process_image(file_location: str, options: ImageProcessingOptions):
     with Image.open(file_location) as img:
-        print("here")
         if options.resize:
             match = re.match(r'(\d+)x(\d+)', options.resize)
             if match:
@@ -27,4 +27,5 @@ def process_image(file_location: str, options: ImageProcessionOptions):
             img.save(file_location, options.convert_to.upper())
         else:
             img.save(file_location)
+
     return file_location

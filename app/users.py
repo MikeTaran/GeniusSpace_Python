@@ -9,7 +9,9 @@ from fastapi_users.authentication import (
 )
 from fastapi_users.db import SQLAlchemyUserDatabase
 from fastapi_users.authentication.strategy.db import AccessTokenDatabase, DatabaseStrategy
-from app.db import User, get_user_db, AccessToken, get_access_token_db
+
+from app.db import get_user_db, get_access_token_db
+from app.user_models import Base, User, AccessToken
 
 SECRET = "SECRET"
 
@@ -46,7 +48,7 @@ def get_database_strategy(
 
 
 auth_backend = AuthenticationBackend(
-    name="database",
+    name="DataBase",
     transport=bearer_transport,
     get_strategy=get_database_strategy,
 )
