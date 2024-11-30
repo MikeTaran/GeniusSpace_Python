@@ -1,3 +1,4 @@
+import logging
 import os
 import shutil
 
@@ -46,6 +47,10 @@ async def upload_file(
 async def download_file(filename: str, user: User = Depends(current_active_user)):
     user_folder = f"{UPLOAD_DIR}/{user.id}"
     file_location = os.path.join(user_folder, filename)
+    logging.debug(f"Request to download file: {filename}")
+    logging.debug(f"Current user ID: {user.id}")
+    logging.debug(f"User folder: {user_folder}")
+    logging.debug(f"User file location: {file_location}")
     if not os.path.exists(file_location):
         raise HTTPException(status_code=404, detail="File not found")
     return FileResponse(file_location)
