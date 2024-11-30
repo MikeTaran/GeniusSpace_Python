@@ -1,12 +1,12 @@
 import logging
 import os
 import re
-from typing import Union
 from PIL import Image, ImageOps
 import pandas as pd
-from docx2pdf import convert
 from pdf2docx import Converter
 from app.schemas import ImageProcessingOptions, FileProcessingOptions, ConversionType
+from docx import Document
+from fpdf import FPDF
 
 
 class FileConverter:
@@ -33,12 +33,26 @@ class FileConverter:
     @staticmethod
     def docx_to_pdf(file_path: str) -> str:
         output_path = f"{os.path.splitext(file_path)[0]}.pdf"
-        convert(file_path, output_path)
+        logging.info(f"Output path for PDF: {output_path}")
+        document = Document(file_path)
+        pdf = FPDF()
+        pdf.set_auto_page_break(auto=True, margin=15)
+        pdf.add_page()
+
+        pdf.add_font("Arial", "", "C:/Windows/Fonts/arial.ttf", uni=True)
+        pdf.set_font("Arial", size=10)
+
+        for paragraph in document.paragraphs:
+            pdf.multi_cell(0, 10, paragraph.text, align="L")
+            pdf.ln(10)
+
+        pdf.output(output_path)
         return output_path
 
     @staticmethod
     def pdf_to_docx(file_path: str) -> str:
         output_path = f"{os.path.splitext(file_path)[0]}.docx"
+        logging.info(f"Output path for DOCX: {output_path}")
         cv = Converter(file_path)
         cv.convert(output_path)
         cv.close()
