@@ -1,11 +1,72 @@
+import logging
 import os
 import re
-import pandas as pd
+from typing import Union
 from PIL import Image, ImageOps
-from app.schemas import ImageProcessingOptions
+import pandas as pd
+from docx2pdf import convert
+from pdf2docx import Converter
+from app.schemas import ImageProcessingOptions, FileProcessingOptions, ConversionType
 
 
-def process_image(file_location: str, options: ImageProcessingOptions):
+class FileConverter:
+    @staticmethod
+    def xlsx_to_csv(file_path: str) -> str:
+        logging.info(f"Converting XLSX to CSV: {file_path}")
+        try:
+            df = pd.read_excel(file_path)
+            output_path = f"{os.path.splitext(file_path)[0]}.csv"
+            df.to_csv(output_path, index=False)
+            logging.info(f"Successfully converted to CSV: {output_path}")
+            return output_path
+        except Exception as e:
+            logging.error(f"Error converting XLSX to CSV: {str(e)}")
+            raise
+
+    @staticmethod
+    def csv_to_xlsx(file_path: str) -> str:
+        df = pd.read_csv(file_path)
+        output_path = f"{os.path.splitext(file_path)[0]}.xlsx"
+        df.to_excel(output_path, index=False)
+        return output_path
+
+    @staticmethod
+    def docx_to_pdf(file_path: str) -> str:
+        output_path = f"{os.path.splitext(file_path)[0]}.pdf"
+        convert(file_path, output_path)
+        return output_path
+
+    @staticmethod
+    def pdf_to_docx(file_path: str) -> str:
+        output_path = f"{os.path.splitext(file_path)[0]}.docx"
+        cv = Converter(file_path)
+        cv.convert(output_path)
+        cv.close()
+        return output_path
+
+
+def process_file(file_location: str, options: FileProcessingOptions) -> str:
+    logging.info(f"Processing file: {file_location} with options: {options}")
+    converter = FileConverter()
+    conversion_map = {
+        ConversionType.XLSX_TO_CSV: converter.xlsx_to_csv,
+        ConversionType.CSV_TO_XLSX: converter.csv_to_xlsx,
+        ConversionType.DOCX_TO_PDF: converter.docx_to_pdf,
+        ConversionType.PDF_TO_DOCX: converter.pdf_to_docx,
+    }
+
+    if options.conversion_type:
+        convert_func = conversion_map.get(options.conversion_type)
+        if convert_func:
+            try:
+                return convert_func(file_location)
+            except Exception as e:
+                logging.error(f"Error during file conversion: {str(e)}")
+                raise Exception(f"File conversion failed: {str(e)}")
+    return file_location
+
+
+def process_image(file_location: str, options: ImageProcessingOptions) -> str:
     with Image.open(file_location) as img:
         if options.resize:
             match = re.match(r'(\d+)x(\d+)', options.resize)
@@ -28,5 +89,3 @@ def process_image(file_location: str, options: ImageProcessingOptions):
         else:
             img.save(file_location)
     return file_location
-
-

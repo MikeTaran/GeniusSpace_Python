@@ -1,8 +1,15 @@
-import uuid
-
+from enum import Enum
 from fastapi_users import schemas
 from pydantic import BaseModel, Field
 from typing import Optional
+import uuid
+
+
+class ConversionType(str, Enum):
+    XLSX_TO_CSV = "xlsx_to_csv"
+    CSV_TO_XLSX = "csv_to_xlsx"
+    DOCX_TO_PDF = "docx_to_pdf"
+    PDF_TO_DOCX = "pdf_to_docx"
 
 
 class UserRead(schemas.BaseUser[uuid.UUID]):
@@ -25,4 +32,4 @@ class ImageProcessingOptions(BaseModel):
 
 
 class FileProcessingOptions(BaseModel):
-    convert_xlsx_to_csv: Optional[str] = Field(None, description="csv")
+    conversion_type: Optional[ConversionType] = Field(None, description="Type of conversion")
