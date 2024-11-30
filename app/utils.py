@@ -1,6 +1,6 @@
 import os
 import re
-
+import pandas as pd
 from PIL import Image, ImageOps
 from app.schemas import ImageProcessingOptions
 
@@ -27,5 +27,6 @@ def process_image(file_location: str, options: ImageProcessingOptions):
             img.save(file_location, options.convert_to.upper())
         else:
             img.save(file_location)
-
     return file_location
+
+

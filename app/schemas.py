@@ -22,3 +22,7 @@ class ImageProcessingOptions(BaseModel):
     convert_to: Optional[str] = Field(None, description="png, jpg, webp")
     grayscale: Optional[bool] = Field(None, description="Convert to grayscale")
     flip: Optional[str] = Field(None, description="horizontal or vertical")
+
+
+class FileProcessingOptions(BaseModel):
+    convert_xlsx_to_csv: Optional[str] = Field(None, description="csv")
