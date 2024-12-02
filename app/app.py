@@ -1,6 +1,7 @@
 from fastapi import Depends, FastAPI
 
 from app.db import User, create_db_and_tables
+from app.default_pages import default_router
 from app.schemas import UserCreate, UserRead, UserUpdate
 from app.users import auth_backend, current_active_user, fastapi_users
 from app.files import file_router
@@ -35,6 +36,11 @@ app.include_router(
     file_router,
     prefix="/files",
     tags=["files"]
+)
+
+app.include_router(
+    default_router,
+    tags=["default_pages"]
 )
 
 

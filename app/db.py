@@ -1,3 +1,4 @@
+import os
 from typing import AsyncGenerator
 
 from fastapi import Depends
@@ -8,7 +9,20 @@ from fastapi_users_db_sqlalchemy.access_token import (
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from app.user_models import Base, User, AccessToken
 
-DATABASE_URL = "postgresql+asyncpg://postgres:22@localhost/FastAPI_DB"
+from dotenv import load_dotenv
+
+current_script_path = os.path.dirname(os.path.abspath(__file__))
+dotenv_path = os.path.join(current_script_path, '..', 'database.env')
+
+load_dotenv(dotenv_path)
+
+HOST_PG = os.getenv("POSTGRES_HOST")
+PORT_PG = os.getenv("POSTGRES_PORT")
+DATABASE_PG = os.getenv("POSTGRES_DB")
+USER_PG = os.getenv("POSTGRES_USER")
+PASSWORD_PG = os.getenv("POSTGRES_PASSWORD")
+
+DATABASE_URL = f"postgresql+asyncpg://{USER_PG}:{PASSWORD_PG}@{HOST_PG}:{PORT_PG}/{DATABASE_PG}"
 
 
 engine = create_async_engine(DATABASE_URL)
