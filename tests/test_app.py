@@ -133,3 +133,15 @@ async def test_logout(async_client, get_token):
     headers = {"Authorization": f"Bearer {get_token}", "Content-Type": "application/json"}
     logout_response = await async_client.post("/auth/jwt/logout", headers=headers)
     assert logout_response.status_code == status.HTTP_204_NO_CONTENT, "Logout failed: " + logout_response.text
+
+
+async def test_user_re_registration(async_client, get_user_by_field):
+    payload = {
+        "email": "test@example.com",
+        "password": "password123",
+    }
+    response = await async_client.post("/auth/register", json=payload)
+    assert response.status_code == status.HTTP_400_BAD_REQUEST, f"Registration should be failed: {response.text}"
+
+    user = await get_user_by_field("email", payload["email"])
+    assert user, "User not found"
