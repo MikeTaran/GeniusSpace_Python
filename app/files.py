@@ -5,7 +5,7 @@ from fastapi import Depends, APIRouter, Form, File, UploadFile, HTTPException
 # from fastapi.responses import FileResponse
 from app.schemas import ImageProcessingOptions, FileProcessingOptions, ConversionType
 from app.users import current_active_user
-from app.db import User
+from app.user_models import User
 from app.utils import process_image, process_file
 
 file_router = APIRouter()

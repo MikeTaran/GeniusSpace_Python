@@ -1,7 +1,8 @@
 import pytest
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
-from app.db import engine, get_async_session
+# from app.db import engine, get_async_session
+from app.db import get_async_session
 from app.app import app
 from app.user_models import Base
 from app.config import settings

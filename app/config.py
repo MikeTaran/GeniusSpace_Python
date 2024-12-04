@@ -26,6 +26,7 @@ class ProdSettings:
     DATABASE_URL: str = f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 
+# $env:environment = "testing" , просмотр:echo $env:environment  - для Power Shell
 def get_settings():
     env = os.getenv("ENVIRONMENT", "Not database. Define global environment").lower()
     if env == "testing":

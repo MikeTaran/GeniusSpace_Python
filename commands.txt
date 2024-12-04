@@ -6,3 +6,7 @@ docker exec -it postgresql bash
 psql -h localhost -U postgres
 
 docker inspect postgresql
+----------------------------------
+# $env:environment = "testing" , просмотр:echo $env:environment  - для Power Shell
+----------------------------------
+pytest tests\ -v -s -p no:warning -W ignore

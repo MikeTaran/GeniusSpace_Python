@@ -1,5 +1,4 @@
 from fastapi import Depends, FastAPI
-
 from app.db import create_db_and_tables, drop_all_tables
 from app.user_models import User
 from app.schemas import UserCreate, UserRead, UserUpdate
