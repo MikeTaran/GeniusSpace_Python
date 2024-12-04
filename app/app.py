@@ -1,10 +1,11 @@
 from fastapi import Depends, FastAPI
 
-from app.db import User, create_db_and_tables
-from app.default_pages import default_router
+from app.db import create_db_and_tables, drop_all_tables
+from app.user_models import User
 from app.schemas import UserCreate, UserRead, UserUpdate
 from app.users import auth_backend, current_active_user, fastapi_users
 from app.files import file_router
+from app.default_pages import default_router
 
 app = FastAPI()
 
@@ -52,3 +53,8 @@ async def authenticated_route(user: User = Depends(current_active_user)):
 @app.on_event("startup")
 async def on_startup():
     await create_db_and_tables()
+
+
+@app.on_event("shutdown")
+async def on_shutdown():
+    await drop_all_tables()
